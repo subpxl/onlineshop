@@ -1,0 +1,9 @@
+version: '3'
+vars:
+  GREETING: online shop!
+
+tasks:
+  run:
+    cmds:
+      - go run ./cmd/web/ .
+    silent: true

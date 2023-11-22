@@ -1,0 +1,36 @@
+{{template "adminHeader.html" . }}
+
+
+
+
+
+<div class="container">
+    {{ if .Data.Category }} <!-- Check if Category data is available (for updating) -->
+    <h1>Update Category</h1>
+    <form action="/admin/category/update/{{ .Data.Category.ID }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ .Data.Token }}">
+        <input type="hidden" name="id" value="{{ .Data.Category.ID }}"> <!-- Include the Category ID for updates -->
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ .Data.Category.Name }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Category</button>
+    </form>
+    {{ else }} <!-- If no Category data is available, create a new category -->
+    <h1>Create Category</h1>
+    <form action="/admin/category/create" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ .Data.Token }}">
+        
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Create Category</button>
+    </form>
+    {{ end }}
+</div>
+
+
+{{template "adminFooter.html" . }}

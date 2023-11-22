@@ -1,0 +1,173 @@
+{{template "header.html" .}}
+<!-- section-header.// -->
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    
+    
+    <!-- ============================ COMPONENT 2 ================================= -->
+    <form action="/checkout" method="post">
+    
+    <div class="row">
+            <main class="col-md-8">
+    
+    <article class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Review cart</h4>
+        <div class="row">
+            
+            <div class="col-md-6" id="cart-items">
+            </div>
+        </div> <!-- row.// -->
+    </div> <!-- card-body.// -->
+    </article> <!-- card.// -->
+    
+    
+    <article class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Contact info</h4>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label>Frst name</label>
+                    <input type="text" name="first_name" placeholder="Type here" class="form-control">
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Last name</label>
+                    <input type="text" name="last_name" placeholder="Type here" class="form-control">
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Phone</label>
+                    <input type="text" name="phone" value="+91" class="form-control">
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="example@gmail.com" class="form-control">
+                </div>
+            </div> <!-- row.// -->	
+            <div class="card-body">
+                <h4 class="card-title mb-4">Delivery info</h4>
+                <!-- <form action=""> -->
+                        
+            
+                    <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label>Address Line 1*</label>
+                                <input name="address_line_1" type="text" placeholder="Type here" class="form-control">
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label>Address Line 2</label>
+                                <input name="address_line_2" type="text" placeholder="Type here" class="form-control">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Landmark</label>
+                                <input name="landmark"  type="text" placeholder="" class="form-control">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Country*</label>
+                                <select name="country" class="form-control">
+                                    <option value="india">India</option>
+                                    <option value="usa">United States</option>
+                                    <option value="france">France</option>
+                                    <option value="italy">Italy</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Postal code</label>
+                                <input type="text" name="pincode" placeholder="" class="form-control">
+                            </div>
+
+                    </div> <!-- row.// -->	
+                <!-- </form> -->
+            </div>
+    
+    </div> <!-- card-body.// -->
+    </article> <!-- card.// -->
+    
+      
+            </main> <!-- col.// -->
+            <aside class="col-md-4">
+                <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                  <dt>Total price:</dt>
+                  <dd class="text-right"  id ="subtotal"></dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Tax:</dt>
+                  <dd class="text-right" id="totaltax" > </dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Total:</dt>
+                  <dd class="text-right text-dark b" id="grandtotal"></dd>
+                </dl>
+                <hr>
+                <p class="text-center mb-3">
+                    <img src="./images/misc/payments.png" height="26">
+                </p>
+                <button type="submit" class="btn btn-primary btn-block"> Place Order </button>
+                
+            </form>
+
+            </div> <!-- card-body.// -->
+            </div> <!-- card.// -->
+            </aside> <!-- col.// -->
+        </div> <!-- row.// -->
+    
+    </div> <!-- container .//  -->
+    </section>
+<script>
+    // Fetch cart data from getCart() function
+const cart = getCart();
+const cartItemsContainer = document.getElementById('cart-items');
+
+
+
+let subtotal = GetCartTotal(cart)
+let tax = GetCartTax(cart)
+let total = subtotal+tax 
+
+console.log( "subtotal  = ",subtotal,"tax = ",tax, "total =",total )
+
+ 
+   // Select the HTML elements by their IDs
+   const subtotalElement = document.getElementById('subtotal');
+    const taxElement = document.getElementById('totaltax');
+    const totalElement = document.getElementById('grandtotal');
+
+    // Update the text content of the elements with the calculated values
+    subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+    taxElement.textContent = `$${tax.toFixed(2)}`;
+    totalElement.textContent = `$${total.toFixed(2)}`;
+
+
+// Function to create a table row for each cart item
+function createCartItemRow(product,index) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+    <td>
+    <figure class="itemside mb-4">
+        <div class="aside"><img src="${product.image}" class="border img-sm"></div>
+        <figcaption class="info">
+            <p>Product: <span class="product-name">${product.name}</span></p>
+            <div class="hidden-input">
+                <input type="hidden" name="product_id_${index}" value="${product.id}">
+                <input type="hidden" name="quantity_${index}" value="${product.quantity}">
+            </div>
+            <span class="text-muted">${product.quantity} x = $${product.price}</span>
+            <span class="text-muted">Total: ${product.quantity * product.price}</span>
+        </figcaption>
+    </figure>
+</td>`;
+    return row;
+}
+// Populate the cart items in the table
+let index = 0;
+for (const itemId in cart) {
+    cartItemsContainer.appendChild(createCartItemRow(cart[itemId], index));
+    index++;
+}
+
+
+</script>
+
+    {{template "footer.html" .}}

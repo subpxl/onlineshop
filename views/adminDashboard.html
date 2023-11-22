@@ -1,0 +1,49 @@
+{{template "adminHeader.html" . }}
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+
+                   <!-- DataTales Example -->
+                   <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Orders</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                    
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>User</th>
+                                        <th>Address</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{range $index, $order := .Data.Orders }}
+                                    <tr>
+                                        <td>{{$order.ID}}</td>
+                                        <td>{{$order.User.FirstName}} {{$order.User.LastName}}</td>
+                                        <td>{{$order.Address.Addressline1}}</td>
+                                        <td>${{$order.Total}}</td>
+                                        <td>{{$order.Status}}</td>
+                                        <td>
+                                            <a href="/admin/order/update/{{ $order.ID }}" class="btn btn-primary">Edit</a>
+                                        </td>
+                                    </tr>
+                                    {{end}}
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div></div></div>
+</div>
+                    </div></div></div>
+<!-- /.container-fluid -->
+
+{{template "adminFooter.html" . }}

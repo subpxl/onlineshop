@@ -1,0 +1,30 @@
+{{template "header.html" .}}
+<!-- section-header.// -->
+
+<!-- Add Bootstrap container class -->
+<div class="container">
+
+    <!-- Success Message -->
+    <div class="alert alert-success" role="alert">
+      Order successfully placed!
+    </div>
+  
+    <h1>Order success</h1>
+    
+    <h2>
+      Payment Status: {{.Data.Payment.RazorpayPaymentID}}
+      Payment ID: {{.Data.Payment.ID}}
+      Payment ID: {{.Data.Payment.Status}}
+    </h2>
+    <hr>
+    <h3>
+        For Order ID: {{.Data.Order.ID}}
+        For Order ID: {{.Data.Order.Status}}
+
+    </h3>
+  
+    <a href="/" class="btn btn-primary">Go to Store</a>
+    <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+  </div>
+  
+{{template "footer.html" .}}

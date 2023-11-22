@@ -1,0 +1,70 @@
+{{template "header.html" .}}
+
+<!-- Add a loading element -->
+<div id="loader" style="display: none;">
+    Loading...
+</div>
+
+<button id="rzp-button1">Pay with Razorpay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var user_id = "{{ .Data.User.ID }}"; // Use double curly braces for Go template variables
+    var order_id = "{{ .Data.Order.ID }}"; // Use double curly braces for Go template variables
+
+    var loader = document.getElementById("loader"); // Get the loader element
+
+    var options = {
+        "key": "{{ .Data.RazorpayId }}",
+        "amount": "{{ .Data.Body.amount }}",
+        "currency": "INR",
+        "name": "Acme Corp",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{ .Data.Body.id }}",
+        "handler": function (response) {
+            // Show the loader when payment is in progress
+            loader.style.display = "block";
+
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature);
+
+            // You can perform other actions related to payment if needed.
+
+            // After payment is completed, you can redirect to the callback URL
+            var callbackURL = `http://localhost:8000/callback?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}&user_id=${user_id}&order_id=${order_id}`;
+            window.location.href = callbackURL;
+            // var callbackURL = `http://localhost:8000/callback?razorpay_payment_id=7777777777777777&razorpay_order_id=33333333333333&razorpay_signature=4444444444&user_id=55555555&order_id=666666666`;
+            // window.location.href = callbackURL;
+        },
+        "prefill": {
+            "name": "{{ .Data.User.Name }}",
+            "email": "{{ .Data.User.Email }}",
+            "contact": "{{ .Data.User.Phone }}"
+        },
+        "notes": {
+            "address": ""
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response) {
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+    });
+
+    document.getElementById('rzp-button1').onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+

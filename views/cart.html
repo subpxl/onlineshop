@@ -1,0 +1,155 @@
+{{template "header.html" .}}
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    
+    <div class="row">
+        <aside class="col-lg-9">
+    <div class="card">
+    <table class="table table-borderless table-shopping-cart">
+    <thead class="text-muted">
+    <tr class="small text-uppercase">
+      <th scope="col">ID</th>
+      <th scope="col">Product</th>
+      <th scope="col" width="120">Quantity</th>
+      <th scope="col" width="120">Price</th>
+      <th scope="col" class="text-right" width="200"> </th>
+    </tr>
+    </thead>
+
+    <tbody id="cart-items">
+        <!-- Cart items will be dynamically generated here using JavaScript -->
+    </tbody>
+
+    
+    </table>
+    </div> <!-- card.// -->
+    
+        </aside> <!-- col.// -->
+    
+            <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                  <dt>Sub Total:</dt>
+                  <dd class="text-right" id="subtotal"  > </dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Tax:</dt>
+                  <dd class="text-right" id ="totaltax" > </dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Total:</dt>
+                  <dd class="text-right text-dark b"  id="total"><strong></strong></dd>
+                </dl>
+                <hr>
+                <p class="text-center mb-3">
+                    <img src="./images/misc/payments.png" height="26">
+                </p>
+                <a href="/checkout" class="btn btn-primary btn-block"> Checkout </a>
+                <a href="/store" class="btn btn-light btn-block">Continue Shopping</a>
+            </div> <!-- card-body.// -->
+            </div> <!-- card.// -->
+    
+    </aside> <!-- col.// -->
+    
+    
+    </div> <!-- row.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    </div> <!-- container .//  -->
+    </section>{{template "footer.html" .}}
+
+    <script>
+
+// Fetch cart data from getCart() function
+const cart = getCart();
+let subtotal = GetCartTotal(cart)
+let tax = GetCartTax(cart)
+let total = subtotal+tax 
+
+console.log( "subtotal  = ",subtotal,"tax = ",tax, "total =",total )
+
+   // Select the HTML elements by their IDs
+   const subtotalElement = document.getElementById('subtotal');
+    const taxElement = document.getElementById('totaltax');
+    const totalElement = document.getElementById('total');
+
+    // Update the text content of the elements with the calculated values
+    subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+    taxElement.textContent = `$${tax.toFixed(2)}`;
+    totalElement.textContent = `$${total.toFixed(2)}`;
+
+
+const cartItemsContainer = document.getElementById('cart-items');
+
+
+
+const cartTotal = GetCartTotal(cart); // Assuming 'cart' is your cart array
+console.log('Cart Total:', cartTotal);
+    // Function to handle item removal
+    function removeItemFromCart(itemId) {
+        // Check if the item exists in the cart object
+        console.log("remove is clicked", itemId);
+        console.log("cart", cart);
+
+        cart.forEach((element , index)=> {
+            console.log("element id ",element.id)
+            if (element.id == itemId){
+                console.log("found ", itemId,"here")
+                cart.splice(index, 1);
+                setCart(cart); 
+            }
+        });
+        UpdateCartUI()
+
+    }
+
+
+// Function to create a table row for each cart item
+function createCartItemRow(cartItem) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${cartItem.id}</td>
+        <td>${cartItem.name}</td>
+        <td>
+            ${cartItem.quantity}
+        </td>
+        <td>${cartItem.price * cartItem.quantity}</td>
+        <td><button class="remove-btn  btn-primary" data-id="${cartItem.id}">Remove</button></td>
+    `;
+    return row;
+}
+
+
+// Populate the cart items in the table
+for (const itemId in cart) {
+    cartItemsContainer.appendChild(createCartItemRow(cart[itemId]));
+}
+
+// Attach event listener for removing items
+cartItemsContainer.addEventListener('click', event => {
+    if (event.target.classList.contains('remove-btn')) {
+        const itemId = event.target.getAttribute('data-id');
+        removeItemFromCart(itemId);
+    }else{
+        console.log("something went wrong")
+    }
+});
+
+function UpdateCartUI() {
+    // Clear the existing cart items in the container
+    while (cartItemsContainer.firstChild) {
+        cartItemsContainer.removeChild(cartItemsContainer.firstChild);
+    }
+
+    // Populate the cart items in the table
+    cart.forEach(cartItem => {
+        cartItemsContainer.appendChild(createCartItemRow(cartItem));
+    });
+}
+
+
+
+    </script>
+    

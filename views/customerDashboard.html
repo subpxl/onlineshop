@@ -1,0 +1,72 @@
+{{template "header.html" .}}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        <div class="row">
+        <aside class="col-md-3">
+            <!--   SIDEBAR   -->
+            <ul class="list-group">
+                <a class="list-group-item active" href="/dashboard/order"> My order history </a>
+                <a class="list-group-item" href="/dashboard/transaction"> Transactions </a>
+                <a class="list-group-item" href="/dashboard/order/return"> Return and refunds </a>
+                <a class="list-group-item" href="/dashboard/setting">Settings </a>
+            </ul>
+            <br>
+            <a class="btn btn-light btn-block" href="/logout"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
+            <!--   SIDEBAR .//END   -->
+        </aside>
+        <main class="col-md-9">
+            <article class="card">
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Hello: {{.Data.User.Name }}</strong>
+            </header>
+            <div class="table-responsive">
+            <table class="table table-hover">
+                {{range $index, $order := .Data.Orders}}
+                <tr>
+                    <td width="65">
+                        <img src="../images/items/1.jpg" class="img-xs border">
+                    </td>
+                    <td>
+                        <var class="price text-muted">USD {{$order.Total}}</var>
+                    </td>
+                    <td>
+                        Seller: {{$order.User.Name}}<br>
+                        Address: {{$order.Address.FirstName}}<br>
+                        Status: {{$order.Status}}
+                    </td>
+                    <td width="250">
+                        <a href="/order/track" class="btn btn-outline-primary">Track order</a>
+                        <a href="/order/{{$order.ID}}" class="btn btn-light">Details</a>
+                    </td>
+                </tr>
+            
+                <!-- Add a nested range to iterate through order items -->
+                {{range $index, $item := $order.OrderItems}}
+                <tr>
+                    <td></td>
+                    <td>
+                        <p class="title mb-0">{{$item.Product.Name}}</p>
+                        <var class="price text-muted">Quantity: {{$item.Quantity}}</var>
+                    </td>
+                    <td>
+                        <!-- You can display more information about the product if needed -->
+                    </td>
+                    <td></td>
+                </tr>
+                {{end}}
+            
+                {{end}}
+            </table>
+            </div> <!-- table-responsive .end// -->
+            </article> <!-- order-group.// --> 
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+{{template "footer.html" .}}

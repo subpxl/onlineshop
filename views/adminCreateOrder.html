@@ -1,0 +1,32 @@
+{{template "adminHeader.html" . }}
+
+<div class="container">
+    {{ if .Data.Order }}
+    <h1>Edit Order</h1>
+    <form action="/admin/order/update/{{ .Data.Order.ID }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ .Data.Token }}">
+        <input type="hidden" name="id" value="{{ .Data.Order.ID }}">
+        <div class="form-group">
+            <label for="name">Status:</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Status" value="{{ .Data.Order.Status }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Order</button>
+    </form>
+    {{ else }}
+    <h1>Create Order</h1>
+    <form action="/admin/order/create" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ .Data.Token }}">
+        
+        <div class="form-group">
+            <label for="name">Status:</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Status">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Create Order</button>
+    </form>
+    {{ end }}
+</div>
+
+
+{{template "adminFooter.html" . }}
